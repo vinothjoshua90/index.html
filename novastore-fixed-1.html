@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NovaStore — The Future of Digital Knowledge</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #222230;
+    --accent: #6c47ff;
+    --accent2: #a78bfa;
+    --text: #f0eeff;
+    --muted: #8880a8;
+    --gold: #f5c842;
+    --green: #22d3a0;
+    --radius: 14px;
+    --font: 'Inter', system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.9); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 66px;
+  }
+  .nav-logo { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; }
+  .nav-logo span { color: var(--accent2); }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: .9rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: .875rem; transition: all .2s; }
+  .btn-ghost:hover { border-color: var(--accent2); color: var(--accent2); }
+  .btn-primary { background: var(--accent); color: #fff; border: none; padding: 9px 20px; border-radius: 8px; cursor: pointer; font-size: .875rem; font-weight: 600; transition: all .2s; }
+  .btn-primary:hover { background: #7c5cff; }
+
+  /* HERO */
+  .hero {
+    min-height: 88vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 5% 60px;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(108,71,255,0.18) 0%, transparent 70%);
+  }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(108,71,255,0.12); border: 1px solid rgba(108,71,255,0.35); color: var(--accent2); padding: 5px 14px; border-radius: 999px; font-size: .8rem; font-weight: 600; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.12; letter-spacing: -1.5px; max-width: 820px; }
+  .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent2), #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { color: var(--muted); font-size: 1.1rem; max-width: 560px; margin: 20px auto 36px; }
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn-lg { padding: 13px 30px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all .2s; border: none; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: #7c5cff; transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .hero-stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border); }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 1.8rem; font-weight: 900; color: var(--text); }
+  .stat-label { color: var(--muted); font-size: .8rem; margin-top: 2px; }
+
+  /* SECTION COMMONS */
+  section { padding: 80px 5%; }
+  .section-label { font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+  .section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; letter-spacing: -0.8px; margin-bottom: 14px; }
+  .section-sub { color: var(--muted); max-width: 540px; line-height: 1.65; }
+
+  /* CATEGORIES */
+  .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 40px; }
+  .cat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 16px; text-align: center; cursor: pointer; transition: all .2s; }
+  .cat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .cat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .cat-name { font-size: .875rem; font-weight: 700; }
+  .cat-count { font-size: .75rem; color: var(--muted); margin-top: 3px; }
+
+  /* PRODUCTS */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 7px 16px; border-radius: 999px; font-size: .82rem; cursor: pointer; transition: all .2s; }
+  .filter-btn.active, .filter-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
+
+  .product-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; transition: all .25s; display: flex; flex-direction: column;
+  }
+  .product-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(108,71,255,0.18); }
+
+  /* REAL COVER IMAGE */
+  .card-cover {
+    width: 100%; height: 200px; overflow: hidden; position: relative;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-cover img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    display: block; transition: transform .3s;
+  }
+  .product-card:hover .card-cover img { transform: scale(1.03); }
+  .card-badge {
+    position: absolute; top: 10px; left: 10px; background: var(--accent); color: #fff;
+    font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; letter-spacing: .5px;
+  }
+  .card-badge.gold { background: var(--gold); color: #1a1000; }
+  .card-badge.green { background: var(--green); color: #001a10; }
+
+  .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+  .card-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .card-creator { display: flex; align-items: center; gap: 5px; }
+  .creator-dot { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .6rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+  .creator-name { font-size: .72rem; color: var(--muted); font-weight: 600; }
+  .verified { color: var(--accent2); font-size: .7rem; }
+  .card-title { font-size: .92rem; font-weight: 700; line-height: 1.4; margin-bottom: 8px; color: var(--text); }
+  .card-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; flex: 1; }
+  .card-rating { display: flex; align-items: center; gap: 4px; font-size: .75rem; color: var(--gold); margin: 10px 0 12px; }
+  .card-rating span { color: var(--muted); }
+  .card-type-tag { display: inline-block; background: rgba(108,71,255,0.12); color: var(--accent2); font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+  .card-price { font-size: 1.15rem; font-weight: 900; color: var(--text); }
+  .card-actions { display: flex; gap: 7px; }
+  .btn-preview { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 6px 13px; border-radius: 7px; font-size: .76rem; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block; }
+  .btn-preview:hover { border-color: var(--accent2); color: var(--accent2); }
+  .btn-buy { background: var(--accent); color: #fff; border: none; padding: 6px 14px; border-radius: 7px; font-size: .76rem; font-weight: 700; cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block; }
+  .btn-buy:hover { background: #7c5cff; }
+
+  /* AUTH MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    width: 100%; max-width: 420px; padding: 36px 32px; position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; }
+  .modal h2 { font-size: 1.55rem; font-weight: 900; margin-bottom: 6px; }
+  .modal p.sub { color: var(--muted); font-size: .875rem; margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .form-group input {
+    width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text);
+    padding: 11px 14px; border-radius: 9px; font-size: .9rem; outline: none; transition: border .2s;
+  }
+  .form-group input:focus { border-color: var(--accent); }
+  .form-group input::placeholder { color: var(--muted); }
+  .btn-form { width: 100%; background: var(--accent); color: #fff; border: none; padding: 13px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 6px; transition: all .2s; }
+  .btn-form:hover { background: #7c5cff; }
+  .auth-switch { text-align: center; font-size: .85rem; color: var(--muted); margin-top: 20px; }
+  .auth-switch a { color: var(--accent2); cursor: pointer; text-decoration: none; font-weight: 600; }
+  .modal-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0; }
+  .modal-divider span { flex: 1; height: 1px; background: var(--border); }
+  .modal-divider p { color: var(--muted); font-size: .78rem; }
+  .social-btns { display: flex; gap: 10px; }
+  .btn-social { flex: 1; background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 9px; font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s; }
+  .btn-social:hover { border-color: var(--accent2); }
+  .success-msg { display: none; text-align: center; padding: 20px; }
+  .success-msg .check { font-size: 2.5rem; margin-bottom: 10px; }
+  .success-msg h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; }
+  .success-msg p { color: var(--muted); font-size: .875rem; }
+
+  /* UPGRADE / PRO */
+  .upgrade-section {
+    background: linear-gradient(135deg, rgba(108,71,255,0.15), rgba(167,139,250,0.08));
+    border: 1px solid rgba(108,71,255,0.3); border-radius: 20px;
+    padding: 60px 50px; margin: 0 5%; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .upgrade-section::before {
+    content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(108,71,255,0.3) 0%, transparent 70%);
+  }
+  .upgrade-section .section-label { justify-content: center; }
+  .upgrade-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 14px; }
+  .upgrade-section h2 em { font-style: normal; color: var(--accent2); }
+  .upgrade-section > p { color: var(--muted); max-width: 520px; margin: 0 auto 40px; font-size: 1rem; }
+  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 780px; margin: 0 auto; }
+  .plan-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px 22px;
+    text-align: left; transition: all .25s; position: relative;
+  }
+  .plan-card.featured { border-color: var(--accent); background: rgba(108,71,255,0.08); }
+  .plan-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: .65rem; font-weight: 800; padding: 3px 12px; border-radius: 999px; letter-spacing: 1px; white-space: nowrap; }
+  .plan-name { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .plan-price { font-size: 2.2rem; font-weight: 900; color: var(--text); }
+  .plan-price sup { font-size: 1rem; vertical-align: super; }
+  .plan-price sub { font-size: .8rem; color: var(--muted); font-weight: 400; }
+  .plan-features { list-style: none; margin: 18px 0 24px; display: flex; flex-direction: column; gap: 9px; }
+  .plan-features li { font-size: .82rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .plan-features li::before { content: '✓'; color: var(--green); font-weight: 900; flex-shrink: 0; }
+  .btn-plan { width: 100%; border: none; padding: 11px; border-radius: 9px; font-size: .875rem; font-weight: 700; cursor: pointer; transition: all .2s; }
+  .btn-plan-filled { background: var(--accent); color: #fff; }
+  .btn-plan-filled:hover { background: #7c5cff; }
+  .btn-plan-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-plan-outline:hover { border-color: var(--accent2); }
+
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 40px; }
+  .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+  .testi-stars { color: var(--gold); font-size: .85rem; margin-bottom: 12px; }
+  .testi-text { font-size: .875rem; color: #c4bcdc; line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+  .author-name { font-size: .82rem; font-weight: 700; }
+  .author-role { font-size: .72rem; color: var(--muted); }
+  .author-verified { font-size: .68rem; color: var(--green); }
+
+  /* FAQ */
+  .faq-list { max-width: 720px; margin: 40px auto 0; display: flex; flex-direction: column; gap: 10px; }
+  .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; cursor: pointer; font-weight: 700; font-size: .9rem; transition: color .2s; }
+  .faq-q:hover { color: var(--accent2); }
+  .faq-icon { font-size: 1rem; color: var(--accent2); transition: transform .2s; }
+  .faq-a { display: none; padding: 0 20px 16px; color: var(--muted); font-size: .875rem; line-height: 1.7; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  /* FOOTER */
+  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 60px 5% 30px; margin-top: 40px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+  .footer-brand p { color: var(--muted); font-size: .85rem; margin: 12px 0 20px; max-width: 280px; line-height: 1.65; }
+  .footer-social { display: flex; gap: 10px; }
+  .social-btn { width: 34px; height: 34px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .75rem; color: var(--muted); cursor: pointer; transition: all .2s; }
+  .social-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+  .footer-col h4 { font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 16px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .footer-col ul a { color: #8880a8; font-size: .85rem; text-decoration: none; transition: color .2s; }
+  .footer-col ul a:hover { color: var(--text); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: .78rem; }
+  .footer-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+  .footer-legal a { color: var(--muted); text-decoration: none; transition: color .2s; }
+  .footer-legal a:hover { color: var(--text); }
+
+  /* PAYHIP REDIRECT BANNER */
+  .payhip-notice {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(34,211,160,0.08); border: 1px solid rgba(34,211,160,0.3);
+    border-radius: 12px; padding: 14px 20px; margin: 0 5% 32px;
+    font-size: .875rem; color: var(--text);
+  }
+  .payhip-notice .notice-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .payhip-notice strong { color: var(--green); }
+  .payhip-notice a { color: var(--accent2); text-decoration: underline; }
+
+  /* COMING SOON BADGE */
+  .coming-soon-section {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 48px; margin: 0 5% 60px; text-align: center;
+  }
+  .coming-soon-section .cs-icon { font-size: 2.5rem; margin-bottom: 14px; }
+  .coming-soon-section h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+  .coming-soon-section p { color: var(--muted); font-size: .9rem; max-width: 440px; margin: 0 auto; }
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; font-size: .875rem; font-weight: 600; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all .3s; max-width: 320px; display: flex; align-items: center; gap: 10px; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 1.1rem; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .upgrade-section { padding: 40px 24px; margin: 0 16px; }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Nova<span>Store</span></a>
+  <ul class="nav-links">
+    <li><a href="#categories">Browse</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#upgrade">Pro</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-ghost" href="https://payhip.com/Novastore77/users/login" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;">Sign In</a>
+    <button class="btn-primary" onclick="openModal('signup')">Get Started</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✦ Now live — 50,000+ creators worldwide</div>
+  <h1>The Future of <em>Digital Knowledge</em><br>Starts Here.</h1>
+  <p>Premium eBooks, PDFs, Courses, and Digital Assets designed for modern creators who refuse to settle for ordinary.</p>
+  <div class="hero-ctas">
+    <button class="btn-lg btn-accent" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Explore Store →</button>
+    <button class="btn-lg btn-outline" onclick="openModal('signup')">Become a Creator</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">12,500+</div><div class="stat-label">Digital Products</div></div>
+    <div class="stat-item"><div class="stat-num">8,000+</div><div class="stat-label">Active Creators</div></div>
+    <div class="stat-item"><div class="stat-num">50,000+</div><div class="stat-label">Happy Learners</div></div>
+    <div class="stat-item"><div class="stat-num">$4.2M+</div><div class="stat-label">Revenue Paid Out</div></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="section-label">Discover</div>
+  <h2 class="section-title">Browse by Category</h2>
+  <p class="section-sub">From mastery-level courses to plug-and-play templates — everything your digital career needs.</p>
+  <div class="categories-grid">
+    <div class="cat-card"><div class="cat-icon">📚</div><div class="cat-name">eBooks</div><div class="cat-count">1,240+ products</div></div>
+    <div class="cat-card"><div class="cat-icon">📄</div><div class="cat-name">PDF Bundles</div><div class="cat-count">860+ products</div></div>
+    <div class="cat-card"><div class="cat-icon">🎓</div><div class="cat-name">Online Courses</div><div class="cat-count">540+ courses</div></div>
+    <div class="cat-card"><div class="cat-icon">🎨</div><div class="cat-name">Design Templates</div><div class="cat-count">2,100+ templates</div></div>
+    <div class="cat-card"><div class="cat-icon">💻</div><div class="cat-name">Dev Assets</div><div class="cat-count">780+ assets</div></div>
+    <div class="cat-card"><div class="cat-icon">📊</div><div class="cat-name">Business Kits</div><div class="cat-count">430+ kits</div></div>
+    <div class="cat-card"><div class="cat-icon">🧠</div><div class="cat-name">AI Prompts</div><div class="cat-count">920+ prompts</div></div>
+    <div class="cat-card"><div class="cat-icon">🚀</div><div class="cat-name">Startup Packs</div><div class="cat-count">320+ packs</div></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-label">🚀 Marketplace</div>
+  <h2 class="section-title">Trending Products</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">eBooks</button>
+    <button class="filter-btn">PDFs</button>
+    <button class="filter-btn">Templates</button>
+    <button class="filter-btn">Bundles</button>
+  </div>
+  <div class="products-grid">
+
+    <!-- 1. The Operator's Code -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqop49di1kqkde715mtckdca415.png"
+             alt="The Operator's Code cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge">🔥 Trending</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">The Operator's Code: 11 Unwritten Rules Elite Operators Follow</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/px9UX" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/px9UX" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. The Unfair Code -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqo9qmhfcng1igm1b55ia61obv15.png"
+             alt="The Unfair Code cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge green">✦ New</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">The Unfair Code</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/IVsUN" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/IVsUN" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LinkedIn Domination Playbook -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqn3dbk4tlf8kq15aq143drj15.png"
+             alt="LinkedIn Domination Playbook cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge gold">★ Bestseller</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">LinkedIn Domination Playbook: The Complete Algorithm Insider's Guide</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.8 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/SLCex" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/SLCex" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DARK AUTHORITY -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqmsvk63q60148v1gmff0v17pl15.png"
+             alt="DARK AUTHORITY cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge">🔥 Trending</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">DARK AUTHORITY: The Operating System They Never Taught You</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/7IQPu" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/7IQPu" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. THE CLOSING DEALS -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqlsrg40sh1j0411gi1tjg1np515.png"
+             alt="THE CLOSING DEALS cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge green">✦ Hot Deal</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">THE CLOSING DEALS: The Grand Master Playbook for Getting Anyone to Say Yes</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.8 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$19</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/tqMf0" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/tqMf0" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CRACK THE WEALTH CODE -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqlm997lmah1ijv18mggivvq215.png"
+             alt="CRACK THE WEALTH CODE cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge gold">★ Bestseller</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">CRACK THE WEALTH CODE (Grand Master Edition)</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$29</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/DXt6d" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/DXt6d" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. LinkedIn Growth Blueprint -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqj70vs41r2p1uia1hr31qkln1s15.png"
+             alt="LinkedIn Growth Blueprint cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge">🔥 Trending</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">The #1 Selling LinkedIn Growth Blueprint for Entrepreneurs, Freelancers & Creators</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.8 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$19</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/vLSy8" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/vLSy8" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. LinkedIn Revenue Machine Premium -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jqj2qgp4sie1t7hpia1k8i112i15.png"
+             alt="LinkedIn Revenue Machine Premium cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge gold">👑 Premium</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">The LinkedIn Revenue Machine BluePrint (Premium)</div>
+        <div class="card-type-tag">Premium eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$99</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/XBx9Y" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/XBx9Y" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Art of LinkedIn Prospecting -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jis91emd116s4o8jsvd2e3ea15.png"
+             alt="Art of LinkedIn Prospecting cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge gold">★ Bestseller</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">The Art of LinkedIn Prospecting: 7 Proven Steps to Predictable Clients & High-Ticket Revenue</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.8 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/tj93A" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/tj93A" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Social Selling UNLOCKED -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jis83jbo136psp2k271cg4md51m.png"
+             alt="Social Selling UNLOCKED cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge">🔥 Trending</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">Social Selling is UNLOCKED: Secrets of LinkedIn's Elite Sales Teams</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/B5YRs" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/B5YRs" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. LinkedIn Content Secrets 2026 -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jii1l762mdi1no31clm1qddfk01a.png"
+             alt="LinkedIn Content Secrets 2026 cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge green">✦ 2026 Edition</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">LinkedIn Content Secrets 2026</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.8 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/w5jCq" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/w5jCq" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Affiliate Marketing Secret Guide 2026 -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jid4598u1e51vfv1m1c105m19ib1c.png"
+             alt="Affiliate Marketing Secret Guide 2026 cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge green">✦ 2026 Edition</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">Affiliate Marketing Secret Guide 2026</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/3r7EF" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/3r7EF" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. AI LinkedIn Lead Generation System -->
+    <div class="product-card">
+      <div class="card-cover">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jid2hbnk1v7g52o9pu1rmg1img1g.png"
+             alt="AI LinkedIn Lead Generation System cover"
+             onerror="this.style.display='none'; this.parentElement.style.background='#1a1a2e'"/>
+        <div class="card-badge">🔥 Trending</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="card-creator">
+            <div class="creator-dot">NS</div>
+            <span class="creator-name">NovaStore</span>
+            <span class="verified">✓</span>
+          </div>
+        </div>
+        <div class="card-title">AI LinkedIn Lead Generation System</div>
+        <div class="card-type-tag">eBook</div>
+        <div class="card-rating">★★★★★ <span>4.9 (verified)</span></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49</div>
+        <div class="card-actions">
+          <a class="btn-preview" href="https://payhip.com/b/oHnuq" target="_blank">Preview</a>
+          <a class="btn-buy" href="https://payhip.com/b/oHnuq" target="_blank">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PAYHIP CHECKOUT NOTICE -->
+<div class="payhip-notice">
+  <span class="notice-icon">🔒</span>
+  <div>
+    <strong>Secure Checkout via Payhip</strong> — Clicking "Buy Now" takes you directly to our secure Payhip checkout where you can pay by PayPal, Visa, Mastercard, or Discover. Your download is delivered instantly after payment. <a href="https://payhip.com/Novastore77" target="_blank">View all products on Payhip →</a>
+  </div>
+</div>
+
+<!-- UPGRADE / PRO PLANS -->
+<div class="upgrade-section" id="upgrade">
+  <div class="section-label">NovaStore Pro</div>
+  <h2>Unlock <em>Unlimited</em> Access</h2>
+  <p>Get all premium products, AI tools, early drops, and a 20% discount on every marketplace purchase.</p>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price"><sup>$</sup>0<sub>/mo</sub></div>
+      <ul class="plan-features">
+        <li>Browse all products</li>
+        <li>Purchase any item</li>
+        <li>Basic download library</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline" onclick="openModal('signup')">Get Started Free</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>$</sup>19<sub>/mo</sub></div>
+      <ul class="plan-features">
+        <li>Unlimited downloads (200+ products)</li>
+        <li>Early access to new drops</li>
+        <li>AI study tools</li>
+        <li>20% discount on all purchases</li>
+        <li>Priority support</li>
+        <li>Creator analytics dashboard</li>
+      </ul>
+      <button class="btn-plan btn-plan-filled" onclick="openModal('signup')">Upgrade to Pro →</button>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Creator</div>
+      <div class="plan-price"><sup>$</sup>0<sub> setup</sub></div>
+      <ul class="plan-features">
+        <li>Sell your own products</li>
+        <li>95% revenue share</li>
+        <li>Instant payouts</li>
+        <li>Full analytics</li>
+        <li>AI marketing tools</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline" onclick="openModal('signup')">Start Selling Free</button>
+    </div>
+  </div>
+</div>
+
+<!-- COURSES — COMING SOON -->
+<div class="coming-soon-section" id="courses">
+  <div class="cs-icon">🎓</div>
+  <h3>Courses — Coming Soon</h3>
+  <p>Premium video courses are in production. Drop your email below to be first in line when they launch.</p>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;">
+    <input type="email" id="notify-email" placeholder="you@example.com"
+      style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:11px 16px;border-radius:9px;font-size:.9rem;outline:none;width:260px;"/>
+    <button onclick="notifyMe()" style="background:var(--accent);color:#fff;border:none;padding:11px 22px;border-radius:9px;font-size:.875rem;font-weight:700;cursor:pointer;">Notify Me</button>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-label">Reviews</div>
+  <h2 class="section-title">What Creators Say</h2>
+  <p class="section-sub">Over 50,000 learners and creators have transformed their digital businesses through NovaStore.</p>
+  <div class="testimonials-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"NovaStore completely changed how I learn. The quality of the eBooks here is genuinely world-class — I made back the cost of my first purchase within a week of applying what I learned."</div>
+      <div class="testi-author">
+        <div class="author-avatar">JT</div>
+        <div>
+          <div class="author-name">Jordan Taylor</div>
+          <div class="author-role">Indie Hacker, SaaS Founder</div>
+          <div class="author-verified">✓ Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"I've spent thousands on courses across Udemy, Coursera, and Skillshare. NovaStore's content blows them all out of the water. The depth and design of these products is unreal."</div>
+      <div class="testi-author">
+        <div class="author-avatar" style="background:#22d3a0;color:#001a10">PM</div>
+        <div>
+          <div class="author-name">Priya Mehta</div>
+          <div class="author-role">UX Lead, Figma</div>
+          <div class="author-verified">✓ Verified Buyer</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"As a creator, NovaStore gives me a platform that actually feels premium. My sales tripled when I moved here. The checkout experience alone converts better than anywhere else."</div>
+      <div class="testi-author">
+        <div class="author-avatar" style="background:#f5c842;color:#1a1000">LC</div>
+        <div>
+          <div class="author-name">Lena Cho</div>
+          <div class="author-role">Digital Creator, 82K followers</div>
+          <div class="author-verified">✓ Verified Creator</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"I launched my first digital product on NovaStore and made $4,200 in the first 30 days. The platform handles everything — delivery, payments, analytics. It just works."</div>
+      <div class="testi-author">
+        <div class="author-avatar" style="background:#818cf8">SW</div>
+        <div>
+          <div class="author-name">Sophia Wu</div>
+          <div class="author-role">Content Creator & Author</div>
+          <div class="author-verified">✓ Verified Creator</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title" style="text-align:center">Questions Answered</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How is NovaStore different from Gumroad or Teachable? <span class="faq-icon">+</span></div>
+      <div class="faq-a">NovaStore combines the best of both worlds: a curated marketplace with a rich learning platform inside a premium design. We offer AI recommendations, a 95% revenue share, instant delivery, and a community of serious creators — not just hobbyists.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What payment methods are accepted? <span class="faq-icon">+</span></div>
+      <div class="faq-a">We accept PayPal, all major credit/debit cards via Stripe, Apple Pay, and Google Pay. Every transaction is secured with bank-level encryption.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How does instant delivery work? <span class="faq-icon">+</span></div>
+      <div class="faq-a">The moment your payment is confirmed, your purchase is added to your personal Download Library. You'll also receive an email with a secure download link. Digital files are protected and tied to your account.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I sell my own products on NovaStore? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Absolutely. Creator accounts are free to open. Upload eBooks, PDFs, courses, templates, or any digital asset. We take just 5% of each sale — you keep 95%. Payouts are processed every Monday via PayPal or bank transfer, with no minimum threshold.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there a subscription or membership tier? <span class="faq-icon">+</span></div>
+      <div class="faq-a">NovaStore Pro ($19/mo) gives you unlimited downloads from a curated library of 200+ premium products, early access to new drops, AI study tools, and a 20% discount on all marketplace purchases.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is your refund policy? <span class="faq-icon">+</span></div>
+      <div class="faq-a">We offer a 7-day no-questions-asked refund on all purchases under $100. For higher-ticket items, we offer a 3-day review window. Courses have a 14-day refund policy if you've completed less than 30% of the content.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="font-size:1.3rem;font-weight:900;letter-spacing:-.5px">Nova<span style="color:var(--accent2)">Store</span></div>
+      <p>The premium digital marketplace for creators, entrepreneurs, and knowledge seekers. Built for people who refuse to settle.</p>
+      <div class="footer-social">
+        <div class="social-btn">𝕏</div>
+        <div class="social-btn">◎</div>
+        <div class="social-btn">in</div>
+        <div class="social-btn">▶</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Marketplace</h4>
+      <ul>
+        <li><a href="#">Browse All</a></li>
+        <li><a href="#">eBooks</a></li>
+        <li><a href="#">PDF Bundles</a></li>
+        <li><a href="#">Courses</a></li>
+        <li><a href="#">Templates</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Creators</h4>
+      <ul>
+        <li><a href="#">Sell on NovaStore</a></li>
+        <li><a href="#">Revenue Share</a></li>
+        <li><a href="#">Creator Academy</a></li>
+        <li><a href="#">Affiliate Program</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Status</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 NovaStore, Inc. All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">DMCA</a>
+    </div>
+  </div>
+</footer>
+
+<!-- SIGN UP MODAL -->
+<div class="modal-overlay" id="modal-signup">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('signup')">✕</button>
+    <div id="signup-form-wrap">
+      <h2>Create account</h2>
+      <p class="sub">Join 50,000+ creators on NovaStore</p>
+      <div class="social-btns" style="margin-bottom:18px">
+        <button class="btn-social" onclick="socialLogin('Google')">🌐 Google</button>
+        <button class="btn-social" onclick="socialLogin('LinkedIn')">💼 LinkedIn</button>
+      </div>
+      <div class="modal-divider"><span></span><p>or sign up with email</p><span></span></div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="Your name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signup-password" placeholder="Create a password"/></div>
+      <button class="btn-form" onclick="handleSignUp()">Create Free Account →</button>
+      <div class="auth-switch">Already have an account? <a href="https://payhip.com/Novastore77/users/login" target="_blank">Sign in via Payhip →</a></div>
+    </div>
+    <div class="success-msg" id="signup-success">
+      <div class="check">🎉</div>
+      <h3>Account created!</h3>
+      <p>Welcome to NovaStore! Your purchases and downloads live in your <a href="https://payhip.com/Novastore77/users/login" target="_blank" style="color:var(--accent2);font-weight:700;">Payhip library</a>. Check your email to get started.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">Done!</span>
+</div>
+
+<script>
+// Modal logic
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+  document.body.style.overflow = '';
+  // reset forms
+  const fw = document.getElementById(type + '-form-wrap');
+  const s = document.getElementById(type + '-success');
+  if (fw) fw.style.display = '';
+  if (s) s.style.display = 'none';
+}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) { const id = o.id.replace('modal-',''); closeModal(id); } });
+});
+
+// Sign Up
+function handleSignUp() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-password').value.trim();
+  if (!name || !email || !pass) { showToast('⚠️', 'Please fill in all fields.'); return; }
+  if (!email.includes('@')) { showToast('⚠️', 'Enter a valid email address.'); return; }
+  if (pass.length < 6) { showToast('⚠️', 'Password must be at least 6 characters.'); return; }
+  document.getElementById('signup-form-wrap').style.display = 'none';
+  document.getElementById('signup-success').style.display = 'block';
+  showToast('🎉', 'Account created! Check your email.');
+}
+
+function socialLogin(provider) {
+  showToast('🔗', 'Redirecting to ' + provider + '…');
+  setTimeout(() => { showToast('✅', provider + ' login successful!'); }, 1500);
+}
+
+// FAQ
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Filter tabs
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Toast
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Notify me (courses coming soon)
+function notifyMe() {
+  const email = document.getElementById('notify-email').value.trim();
+  if (!email || !email.includes('@')) { showToast('⚠️', 'Enter a valid email address.'); return; }
+  document.getElementById('notify-email').value = '';
+  showToast('✅', 'You\'re on the list! We\'ll notify you at launch.');
+}
+
+// Upgrade buttons
+document.querySelectorAll('.btn-plan').forEach(btn => {
+  btn.addEventListener('click', () => openModal('signup'));
+});
+</script>
+</body>
+</html>
